@@ -39,7 +39,15 @@ var vector = new VectorLayer({
 });
 map.addLayer(vector);
 
+let count = 30;
+
+let theRandomFeatureInterval;
+
 function addRandomFeature() {
+  if (!count--) {
+    clearInterval(theRandomFeatureInterval);
+    return;
+  }
   var x = Math.random() * 360 - 180;
   var y = Math.random() * 180 - 90;
   var geom = new Point(fromLonLat([x, y]));
@@ -87,4 +95,4 @@ source.on('addfeature', function(e) {
   flash(e.feature);
 });
 
-window.setInterval(addRandomFeature, 1000);
+theRandomFeatureInterval = window.setInterval(addRandomFeature, 1000);
