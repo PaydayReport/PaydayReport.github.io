@@ -8,36 +8,48 @@ import Point from 'ol/geom/Point.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {fromLonLat} from 'ol/proj.js';
 import {OSM, Vector as VectorSource} from 'ol/source.js';
-import {Circle as CircleStyle, Stroke, Style} from 'ol/style.js';
+import {Circle as CircleStyle, Fill, Icon, Stroke, Style} from 'ol/style.js';
 
+
+const randomDotSource = new VectorSource({ wrapX: false });
 
 var map = new Map({
-  layers: [
-  new TileLayer({
-    source: new OSM({
-      wrapX: false
-    })
-  })
-  ],
-  controls: defaultControls({
-    attributionOptions: {
-      collapsible: false
-    }
-  }),
-  target: 'map',
+  target: document.getElementById('map'),
+  loadTilesWhileAnimating: true,
   view: new View({
-    center: [0, 0],
-    zoom: 1
-  })
+    center: [-5639523.95, -3501274.52],
+    zoom: 10,
+    minZoom: 2,
+    maxZoom: 19
+  }),
+  controls: defaultControls({}),
+  layers: [
+    new TileLayer({
+      source: new OSM({
+        wrapX: false
+      })
+    }),
+    new VectorLayer({
+      source: new VectorSource({
+        features: [
+          new Feature({
+            type: 'icon',
+            geometry: new Point([-5639523.95, -3501274.52])
+          })
+        ]
+      }),
+      style(feature) {
+        return new Style({
+          image: new Icon({
+            anchor: [0.5, 1],
+            src: 'data/icon.png'
+          })
+        });
+      }
+    }),
+    new VectorLayer({ source: randomDotSource })
+  ]
 });
-
-var source = new VectorSource({
-  wrapX: false
-});
-var vector = new VectorLayer({
-  source: source
-});
-map.addLayer(vector);
 
 let count = 30;
 
@@ -52,7 +64,7 @@ function addRandomFeature() {
   var y = Math.random() * 180 - 90;
   var geom = new Point(fromLonLat([x, y]));
   var feature = new Feature(geom);
-  source.addFeature(feature);
+  randomDotSource.addFeature(feature);
 }
 
 var duration = 3000;
@@ -91,7 +103,7 @@ function flash(feature) {
   }
 }
 
-source.on('addfeature', function(e) {
+randomDotSource.on('addfeature', function(e) {
   flash(e.feature);
 });
 
