@@ -2,7 +2,7 @@ import Feature from 'ol/Feature.js';
 import Map from 'ol/Map.js';
 import {unByKey} from 'ol/Observable.js';
 import View from 'ol/View.js';
-import {defaults as defaultControls} from 'ol/control.js';
+import {defaults as defaultControls, FullScreen} from 'ol/control.js';
 import {easeOut} from 'ol/easing.js';
 import Point from 'ol/geom/Point.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
@@ -22,7 +22,11 @@ var map = new Map({
     minZoom: 2,
     maxZoom: 19
   }),
-  controls: defaultControls({}),
+  controls: defaultControls().extend([
+    new FullScreen({
+      source: 'fullscreen',
+    }),
+  ]),
   layers: [
     new TileLayer({
       source: new OSM({
