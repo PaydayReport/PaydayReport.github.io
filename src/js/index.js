@@ -42,7 +42,7 @@ var map = new Map({
         return new Style({
           image: new Icon({
             anchor: [0.5, 1],
-            src: 'data/icon.png'
+            src: 'https://paydayreport.github.io/dist/images/icon.png'
           })
         });
       }
